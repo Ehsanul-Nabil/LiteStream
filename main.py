@@ -5,14 +5,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import models
 from database import engine, get_db
-from routers import video, comment, like
+from routers import video, comment, like, user
 
 
 
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="LiteTube Backend")
+app = FastAPI(title="LiteStream Backend")
 
 # CORS Setup
 origins = [
@@ -46,9 +46,10 @@ def login(username: str = Form(...), password: str = Form(...), db: Session = De
     user = db.query(models.User).filter(models.User.username == username).first()
     if not user or not check_password_hash(user.password, password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"access_token": user.username, "token_type": "bearer"}
+    return {"access_token": user.username,"user_role":user.type, "token_type": "bearer"}
 
 
+app.include_router(user.router)
 app.include_router(video.router)
 app.include_router(comment.router)
 app.include_router(like.router)

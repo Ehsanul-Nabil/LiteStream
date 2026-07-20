@@ -43,3 +43,20 @@ def add_comment(video_id: int, token: str = Form(...), content: str = Form(...),
         "content": comment.content,
         "timestamp": comment.timestamp.strftime('%Y-%m-%d %H:%M')
     }
+
+@router.delete("/{comment_id}")
+def delete_comment(comment_id: int, token: str = Form(...), db: Session = Depends(get_db)):
+    user = get_user_by_token(token, db)
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid Token")
+    
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment Not Found") 
+    db.delete(comment)
+    db.commit()
+    # deleted_count = db.query(models.Comment).filter(models.Comment.id == comment_id).delete()
+    # db.commit()
+    # if deleted_count == 0:
+    # raise HTTPException(status_code=404, detail="Comment not found")
+    return {"message": "Comment deleted Successfully"}

@@ -11,6 +11,8 @@ class User(Base):
     username = Column(String, unique=True)
     email = Column(String)
     password = Column(String)
+    type = Column(String,default="user")
+
 
 class Video(Base):
     __tablename__ = "videos"
