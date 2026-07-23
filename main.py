@@ -20,7 +20,7 @@ origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://127.0.0.1:5500",
-    "http://localhost:5173"
+    "http://localhost:5173",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -37,6 +37,7 @@ cloudinary.config(
     api_secret = "asyH0JzgzXtOlwNaQE1DRAxYG-8",
     secure = True
 )
+
 
 from typing import Annotated
 from fastapi import Form, Depends, HTTPException
