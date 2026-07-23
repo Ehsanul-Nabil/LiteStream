@@ -21,7 +21,7 @@ class VideoMetadataCreate(BaseModel):
     video_url: str
     public_id: str
 
-@router.post("/videos")
+@router.post("/upload")
 def create_video_metadata(
     payload: VideoMetadataCreate, 
     token: str, # Or extract from Authorization Header if using Bearer tokens
