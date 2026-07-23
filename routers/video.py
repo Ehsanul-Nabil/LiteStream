@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, UploadFile, Depends, HTTPException, File
+from fastapi import APIRouter, Form, UploadFile, Depends, HTTPException, File,Header
 from sqlalchemy.orm import Session
 import cloudinary.uploader
 from auth import get_user_by_token
@@ -14,7 +14,6 @@ router = APIRouter(
 
 
 
-# Pydantic model matching the JSON payload sent from your updated frontend Upload.jsx
 class VideoMetadataCreate(BaseModel):
     title: str
     description: str = None
@@ -24,23 +23,27 @@ class VideoMetadataCreate(BaseModel):
 @router.post("/videos")
 def create_video_metadata(
     payload: VideoMetadataCreate, 
-    token: str, # Or extract from Authorization Header if using Bearer tokens
+    authorization: str = Header(None), # Extracts Authorization header from request
     db: Session = Depends(get_db)
 ):
-    if not payload.title.strip() or not payload.description.strip():
-        raise HTTPException(status_code=400, detail="Title and Description cannot be empty")
+    if not payload.title or not payload.title.strip():
+        raise HTTPException(status_code=400, detail="Title cannot be empty")
+    
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid token header")
+    
+    token = authorization.split(" ")[1]
     
     # Authenticate user
     user = get_user_by_token(token, db)
     if not user:
-        raise HTTPException(status_code=400, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token")
         
-    # Save the metadata and Cloudinary URL directly to PostgreSQL/Supabase
     try:
         video = models.Video(
             title=payload.title, 
             description=payload.description, 
-            filename=payload.video_url, # Storing the Cloudinary secure URL
+            filename=payload.video_url,
             uploader_id=user.id
         )
         db.add(video)
