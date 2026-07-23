@@ -1,11 +1,18 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+import os
+from dotenv import load_dotenv
 
 
+# Load the environment variables from the .env file
+load_dotenv()
 # DATABASE_URL = "postgresql://postgres.ntkhrbxtuvoehutkamnz:http%3A%2F%2Fbangladesh_lite_tube.com%2F%23%23%23%23%23%23%23%23%23%23%23%23%23@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres"
-DATABASE_URL = "sqlite:///database.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-# engine = create_engine(DATABASE_URL, echo=True) #For Supabase
+DATABASE_URL = os.getenv("DATABASE_URL")#For Supabase
+# engine = create_engine(DATABASE_URL, echo=True) #For Supabase #echo for debug
+engine = create_engine(DATABASE_URL) #For Supabase
+
+# DATABASE_URL = "sqlite:///database.db"
+# engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 
 # 1. This is the factory setup (Done once at startup)

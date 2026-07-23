@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Form, UploadFile, Depends, HTTPException, File
 from sqlalchemy.orm import Session
-import cloudinary
 import cloudinary.uploader
 from auth import get_user_by_token
 
@@ -12,13 +11,7 @@ router = APIRouter(
     tags=["Videos"]
 )
 
-# --- Cloudinary Configuration ---
-cloudinary.config( 
-    cloud_name = "dwlugbeiy", 
-    api_key = "128434712479645", 
-    api_secret = "asyH0JzgzXtOlwNaQE1DRAxYG-8",
-    secure = True
-)
+
 
 
 @router.post("/upload")

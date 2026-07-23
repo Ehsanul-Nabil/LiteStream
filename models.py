@@ -1,9 +1,8 @@
-from sqlalchemy import  Column, Integer, String, ForeignKey, Text, DateTime
+from sqlalchemy import  Column, Integer, String, ForeignKey, Text, DateTime,Boolean
 from sqlalchemy.orm import relationship
 import datetime
 
 from database import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -11,7 +10,19 @@ class User(Base):
     username = Column(String, unique=True)
     email = Column(String)
     password = Column(String)
-    type = Column(String,default="user")
+    type = Column(String, default="user")
+    profile_pic = Column(
+        String, 
+        nullable=True, 
+    default="",
+    server_default=""
+    )
+    
+    phone = Column(String, nullable=True, default="Not set")
+    address = Column(String, nullable=True, default="Not set")
+    # "July 21, 2026"
+    member_since = Column(String, default=lambda: datetime.datetime.now().strftime("%B %d, %Y")) 
+    is_active = Column(Boolean, default=False)
 
 
 class Video(Base):
