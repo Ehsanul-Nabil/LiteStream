@@ -40,6 +40,7 @@ def like_video(video_id: int, token: str = Form(...), db: Session = Depends(get_
     db.commit()
     return {"likes": video.likes, "liked": liked}
 
+
 @router.post("/check/{video_id}")
 def check_liked(video_id: int, token: str = Form(...), db: Session = Depends(get_db)):
     user = get_user_by_token(token, db)

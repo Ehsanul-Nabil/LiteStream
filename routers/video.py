@@ -103,6 +103,8 @@ def create_video_metadata(
 @router.get("")
 def list_videos(db: Session = Depends(get_db)):
     videos = db.query(models.Video).all()
+    # # Added order_by to sort by created_at descending (latest first)
+    # videos = db.query(models.Video).order_by(models.Video.created_at.desc()).all()
     return [
         {
             "id": video.id,
